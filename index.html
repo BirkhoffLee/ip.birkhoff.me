@@ -10,15 +10,27 @@
   <link rel="stylesheet" href="highlight/styles/github.css">
   <script src="js/highlight.pack.js"></script>
   <style>
+  * { padding: 0; margin: 0; }
+
+  html, body, #wrapper {
+    min-height: 100% !important;
+    height: 100%;
+  }
+
   pre.json {
     background-color: #FFFFFF;
-    margin: 0
+    margin: 0;
+    min-height: calc(100% - 30px);
+    height: calc(100% - 30px);
+    padding: 15px;
   }
   </style>
 </head>
 
 <body>
-  <pre class="json" id="code"></pre>
+  <div id="wrapper">
+    <pre class="json" id="code"></pre>
+  </div>
 
   <script>
     let request = new XMLHttpRequest();
@@ -28,6 +40,8 @@
       codeEl.innerHTML = JSON.stringify(json, null, 2);
       hljs.highlightBlock(codeEl);
     }
+
+    updateCode({status: "loading"})
 
     request.open('GET', 'https://api.birkhoff.me/v1/ip', true);
 
@@ -39,7 +53,7 @@
       } else {
         // We reached our target server, but it returned an error
         updateCode({
-          error: true
+          status: "error"
         })
       }
     };
@@ -47,7 +61,7 @@
     request.onerror = function() {
       // There was a connection error of some sort
       updateCode({
-        error: true
+        status: "error"
       })
     };
 
